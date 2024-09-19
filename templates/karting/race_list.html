@@ -1,17 +1,34 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Race schedule</h1>
-  {% if race_list %}
-    <ul>
-      {% for race in race_list %}
-        <li>
-{#          <a href="{% url "karting:race-detail" pk=race.id %} ">{{ race.id }}</a>#}
-          {{ race.model }} ({{ race.category.name }})
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>There are no races in schedule</p>
-  {% endif %}
+  <div class="container mt-5">
+    <h1 class="mb-4 text-center">Upcoming Races</h1>
+
+    {% if race_list %}
+      <div class="row">
+        {% for race in race_list %}
+          <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title">
+                  {{ race.name }}
+                </h5>
+                <p class="card-text">
+                  <strong>Category:</strong> {{ race.category.name }}<br>
+                  <strong>Date:</strong> {{ race.date }}
+                </p>
+              </div>
+              <div class="card-footer text-center">
+                <a href="{% url 'karting:race-detail' pk=race.id %}" class="btn btn-primary">View Details</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="alert alert-warning text-center" role="alert">
+        There are no upcoming races in the schedule.
+      </div>
+    {% endif %}
+  </div>
 {% endblock %}

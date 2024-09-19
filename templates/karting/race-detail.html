@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}
+  <title>{{ race.name }} Details</title>
+{% endblock %}
+
+{% block content %}
+  <h2>{{ race.name }}</h2>
+  <p><strong>Date:</strong> {{ race.date }}</p>
+  <p><strong>Category:</strong> {{ race.category.name }}</p>
+
+  <a href="#" class="btn btn-primary">Sign Up for this Race</a>
+
+  <br>
+  <a href="{% url 'karting:race-list' %}">Back to Race List</a>
+{% endblock %}

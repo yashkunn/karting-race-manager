@@ -11,15 +11,21 @@
     <tr>
       <th>Name</th>
       <th>Category</th>
-      <th>Spead</th>
+      <th>Speed</th>
     </tr>
     </thead>
     <tbody>
-    {% for kart in kart_list %}
+    {% for kart in karts %}
       <tr>
-        <td>{{ kart.name }}</td>
-        <td>{{ kart.category }}</td>
-        <td>{{ kart.spead }}</td>
+        <td>
+          <a href="{% url 'karting:kart-detail' kart.pk %}">{{ kart.name }}</a>>
+        </td>
+        <td>{{ kart.category.name }}</td>
+        <td>{{ kart.speed }} km/h</td>
+      </tr>
+    {% empty %}
+      <tr>
+        <td colspan="3">No karts available.</td>
       </tr>
     {% endfor %}
     </tbody>

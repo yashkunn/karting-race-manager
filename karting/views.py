@@ -29,8 +29,21 @@ class RaceListView(generic.ListView):
     paginate_by = 5
 
 
+class RaceDetailView(generic.DetailView):
+    model = Race
+    queryset = Race.objects.select_related("category")
+    template_name = "karting/race-detail.html"
+
+
 class KartListView(generic.ListView):
     model = Kart
     template_name = "karting/kart_list.html"
+    context_object_name = "karts"
     queryset = Kart.objects.select_related("category")
     paginate_by = 5
+
+
+class KartDetailView(generic.DetailView):
+    model = Kart
+    queryset = Kart.objects.select_related("category")
+    template_name = "karting/kart-detail.html"
