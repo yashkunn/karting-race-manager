@@ -21,16 +21,17 @@
     </div>
     <div class="col-sm-9">
       {% block content %}
+        <h3>Popular karts:</h3>
+        <ul>
+          {% for kart in popular_karts %}
+            <li>{{ kart.name }} - Speed: {{ kart.speed }} km/h</li>
+          {% empty %}
+            <li>No popular karts available.</li>
+          {% endfor %}
+        </ul>
+        <p>You have visited this page {{ num_visits }} time{{ num_visits|pluralize }}</p>
       {% endblock %}
-      <h3>Popular karts:</h3>
-      <ul>
-        {% for kart in popular_karts %}
-          <li>{{ kart.name }} - Speed: {{ kart.speed }} km/h</li>
-        {% empty %}
-          <li>No popular karts available.</li>
-        {% endfor %}
-      </ul>
-      <p>You have visited this page {{ num_visits }} time{{ num_visits|pluralize }}</p>
+    
     </div>
   </div>
 </div>

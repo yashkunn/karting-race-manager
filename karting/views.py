@@ -1,5 +1,6 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
+from django.views import generic
 
 from karting.models import Race, Kart
 
@@ -19,3 +20,17 @@ def index(request: HttpRequest) -> HttpResponse:
     }
 
     return render(request, "karting/index.html", context=context)
+
+
+class RaceListView(generic.ListView):
+    model = Race
+    template_name = "karting/race_list.html"
+    queryset = Race.objects.select_related("category")
+    paginate_by = 5
+
+
+class KartListView(generic.ListView):
+    model = Kart
+    template_name = "karting/kart_list.html"
+    queryset = Kart.objects.select_related("category")
+    paginate_by = 5

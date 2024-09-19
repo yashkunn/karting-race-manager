@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Race schedule</h1>
+  {% if race_list %}
+    <ul>
+      {% for race in race_list %}
+        <li>
+{#          <a href="{% url "karting:race-detail" pk=race.id %} ">{{ race.id }}</a>#}
+          {{ race.model }} ({{ race.category.name }})
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>There are no races in schedule</p>
+  {% endif %}
+{% endblock %}
