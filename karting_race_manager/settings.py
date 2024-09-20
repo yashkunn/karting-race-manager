@@ -37,7 +37,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
+    # custom apps
     "karting",
+    "accounts",
 ]
 
 MIDDLEWARE = [
@@ -128,4 +131,12 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+
+# Custom user model
 AUTH_USER_MODEL = "karting.CustomUser"
+
+
+# Redirects
+LOGIN_REDIRECT_URL = '/'
+
+LOGOUT_REDIRECT_URL = '/'
