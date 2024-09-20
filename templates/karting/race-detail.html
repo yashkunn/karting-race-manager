@@ -9,8 +9,12 @@
   <p><strong>Date:</strong> {{ race.date }}</p>
   <p><strong>Category:</strong> {{ race.category.name }}</p>
 
-  <a href="#" class="btn btn-primary">Sign Up for this Race</a>
+  {% if is_eligible %}
+    <a href="#" class="btn btn-primary">Sign Up for this Race</a>
+  {% else %}
+    <p class="text-muted">You are not eligible to participate in this race due to age restrictions.</p>
+  {% endif %}
 
   <br>
   <a href="{% url 'karting:race-list' %}">Back to Race List</a>
-{% endblock %}
+{% endblock %} 

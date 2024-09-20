@@ -34,6 +34,18 @@ class RaceDetailView(generic.DetailView):
     queryset = Race.objects.select_related("category")
     template_name = "karting/race-detail.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        race = self.get_object()
+        is_eligible = False
+
+        if self.request.user.is_authenticated:
+            is_eligible = race.is_user_eligible(self.request.user)
+
+        context['is_eligible'] = is_eligible
+
+        return context
+
 
 class KartListView(generic.ListView):
     model = Kart

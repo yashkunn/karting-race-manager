@@ -27,7 +27,7 @@ class RaceCategoryAdmin(admin.ModelAdmin):
 class CustomUserAdmin(UserAdmin):
     list_display = UserAdmin.list_display + ("age",)
     fieldsets = UserAdmin.fieldsets + (
-        (("Additional info", {"fields": ("age",)}),)
+        (("Additional info", {"fields": ("date_of_birth",)}),)
     )
     add_fieldsets = UserAdmin.add_fieldsets + (
         (
@@ -37,7 +37,7 @@ class CustomUserAdmin(UserAdmin):
                     "fields": (
                         "first_name",
                         "last_name",
-                        "age",
+                        "date_of_birth",
                         "email",
                     )
                 },
