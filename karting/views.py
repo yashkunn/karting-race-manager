@@ -26,7 +26,7 @@ class RaceListView(generic.ListView):
     model = Race
     template_name = "karting/race_list.html"
     queryset = Race.objects.select_related("category")
-    paginate_by = 5
+    paginate_by = 2
 
 
 class RaceDetailView(generic.DetailView):
