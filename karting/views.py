@@ -1,7 +1,8 @@
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 
+from karting.forms import RaceRegistrationForm
 from karting.models import Race, Kart
 
 
@@ -42,7 +43,7 @@ class RaceDetailView(generic.DetailView):
         if self.request.user.is_authenticated:
             is_eligible = race.is_user_eligible(self.request.user)
 
-        context['is_eligible'] = is_eligible
+        context["is_eligible"] = is_eligible
 
         return context
 
@@ -59,3 +60,29 @@ class KartDetailView(generic.DetailView):
     model = Kart
     queryset = Kart.objects.select_related("category")
     template_name = "karting/kart-detail.html"
+
+
+def register_for_race(request, race_id) -> HttpResponse:
+    race = get_object_or_404(Race, id=race_id)
+
+    if request.method == "POST":
+        form = RaceRegistrationForm(
+            request.POST,
+            user=request.user,
+            race_category=race.category
+        )
+        if form.is_valid():
+            race_participation = form.save(commit=False)
+            race_participation.user = request.user
+            race_participation.race = race
+            race_participation.save()
+            return redirect("karting:race-detail", race_id=race.id)
+    else:
+        form = RaceRegistrationForm(user=request.user, race_category=race.category)
+
+    return render(request, "karting/register_for_race.html", {
+        "race": race,
+        "username": request.user.username,
+        "form": form,
+    })
+    
