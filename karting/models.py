@@ -1,48 +1,31 @@
+from datetime import date
+
 from django.conf import settings
 from django.db import models
 
-from django.contrib.auth.models import AbstractUser, UserManager
+from django.contrib.auth.models import AbstractUser
 
-
-RACE_CATEGORIES = {
-    "pioner-n-mini": "Pioneer N Mini",
-    "pioner-n": "Pioneer N",
-    "national-junior": "National Junior",
-    "junior": "Junior",
-}
-
-
-class CustomUserManager(UserManager):
-
-    def create_superuser(
-            self,
-            username,
-            email=None,
-            password=None,
-            **extra_fields
-    ) -> AbstractUser:
-        extra_fields.setdefault("is_staff", True)
-        extra_fields.setdefault("is_superuser", True)
-
-        if extra_fields.get("is_staff") is not True:
-            raise ValueError("Superuser must have is_staff=True.")
-        if extra_fields.get("is_superuser") is not True:
-            raise ValueError("Superuser must have is_superuser=True.")
-
-        extra_fields.setdefault("age", 18)
-
-        return self.create_user(username, email, password, **extra_fields)
+from karting.managers import CustomUserManager
 
 
 class CustomUser(AbstractUser):
-    age = models.PositiveIntegerField(null=False, blank=False)
+    date_of_birth = models.DateField(null=False, blank=False)
     objects = CustomUserManager()
+
+    @property
+    def age(self) -> int | None:
+        if self.date_of_birth:
+            today = date.today()
+            age = today.year - self.date_of_birth.year
+            if (today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day):
+                age -= 1
+            return age
+        return None
 
 
 class RaceCategory(models.Model):
     name = models.CharField(
         max_length=100,
-        choices=RACE_CATEGORIES.items(),
         unique=True)
     description = models.TextField()
     min_age = models.PositiveIntegerField()
