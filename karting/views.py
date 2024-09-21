@@ -10,7 +10,10 @@ from karting.models import Race, Kart
 
 def index(request: HttpRequest) -> HttpResponse:
     """View function for the home page of the site."""
-    upcoming_races = Race.objects.upcoming().order_by("date")[:3]
+    if request.user.is_staff:
+        upcoming_races = Race.objects.order_by("date")[:3]
+    else:
+        upcoming_races = Race.objects.upcoming().order_by("date")[:3]
     popular_karts = Kart.objects.order_by("-speed")[:3]
     num_visits = request.session.get("num_visits", 0)
     request.session["num_visits"] = num_visits + 1
@@ -30,7 +33,10 @@ class RaceListView(generic.ListView):
     paginate_by = 2
 
     def get_queryset(self):
-        return Race.objects.upcoming().select_related("category")
+        if self.request.user.is_staff:
+            return Race.objects.select_related("category").order_by("date")
+        else:
+            return Race.objects.upcoming().select_related("category")
 
 
 class RaceCreateView(generic.CreateView):
