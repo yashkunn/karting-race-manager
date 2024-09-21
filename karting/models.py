@@ -5,7 +5,7 @@ from django.db import models
 
 from django.contrib.auth.models import AbstractUser
 
-from karting.managers import CustomUserManager
+from karting.managers import CustomUserManager, RaceManager
 
 
 class CustomUser(AbstractUser):
@@ -30,6 +30,7 @@ class RaceCategory(models.Model):
     description = models.TextField()
     min_age = models.PositiveIntegerField()
     max_age = models.PositiveIntegerField()
+
 
     def __str__(self):
         return self.name
@@ -57,6 +58,7 @@ class Race(models.Model):
         related_name="races"
     )
     date = models.DateField()
+    objects = RaceManager()
 
     def __str__(self) -> str:
         return self.name

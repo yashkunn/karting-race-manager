@@ -1,5 +1,6 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.utils import timezone
 from django.views import generic
 
 from karting.forms import RaceRegistrationForm
@@ -8,8 +9,7 @@ from karting.models import Race, Kart
 
 def index(request: HttpRequest) -> HttpResponse:
     """View function for the home page of the site."""
-
-    upcoming_races = Race.objects.order_by("date")[:3]
+    upcoming_races = Race.objects.upcoming().order_by("date")[:3]
     popular_karts = Kart.objects.order_by("-speed")[:3]
     num_visits = request.session.get("num_visits", 0)
     request.session["num_visits"] = num_visits + 1
@@ -26,8 +26,10 @@ def index(request: HttpRequest) -> HttpResponse:
 class RaceListView(generic.ListView):
     model = Race
     template_name = "karting/race_list.html"
-    queryset = Race.objects.select_related("category")
     paginate_by = 2
+
+    def get_queryset(self):
+        return Race.objects.upcoming().select_related("category")
 
 
 class RaceDetailView(generic.DetailView):
@@ -76,7 +78,7 @@ def register_for_race(request, race_id) -> HttpResponse:
             race_participation.user = request.user
             race_participation.race = race
             race_participation.save()
-            return redirect("karting:race-detail", race_id=race.id)
+            return redirect("karting:race-detail", pk=race.id)
     else:
         form = RaceRegistrationForm(user=request.user, race_category=race.category)
 

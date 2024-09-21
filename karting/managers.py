@@ -1,4 +1,6 @@
-from django.contrib.auth.models import UserManager, AbstractUser
+from django.contrib.auth.models import UserManager
+from django.db import models
+from django.utils import timezone
 
 
 class CustomUserManager(UserManager):
@@ -21,3 +23,9 @@ class CustomUserManager(UserManager):
         extra_fields["date_of_birth"] = "2000-01-01"
 
         return self.create_user(username, email, password, **extra_fields)
+
+
+class RaceManager(models.Manager):
+    def upcoming(self):
+        today = timezone.now().date()
+        return self.filter(date__gte=today).order_by("date")
