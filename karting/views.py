@@ -71,6 +71,18 @@ class KartListView(generic.ListView):
     paginate_by = 5
 
 
+class KartCreateView(generic.CreateView):
+    model = Kart
+    fields = "__all__"
+    success_url = reverse_lazy("karting:karts-list")
+
+
+class KartUpdateView(generic.UpdateView):
+    model = Kart
+    fields = "__all__"
+    success_url = reverse_lazy("karting:karts-list")
+
+
 class KartDetailView(generic.DetailView):
     model = Kart
     queryset = Kart.objects.select_related("category")
