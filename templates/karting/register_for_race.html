@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load crispy_forms_filters %}
 
 {% block title %}
   <title>Register for {{ race.name }}</title>
@@ -9,7 +10,7 @@
   <p>Username: {{ username }}</p>
   <form method="POST">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form|crispy }}
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
   <a href="{% url 'karting:race-detail' race.id %}">Back to Race Details</a>
