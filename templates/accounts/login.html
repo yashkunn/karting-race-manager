@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base/base.html" %}
 {% load crispy_forms_filters %}
 
 
@@ -8,5 +8,5 @@
     {{ form|crispy }}
     <button type="submit" class="btn btn-primary">Login</button>
   </form>
-  <p>Don't have an account? <a href="#">Sign up here</a></p>
+  <p>Don't have an account? <a href="{% url 'accounts:register' %}">Sign up here</a></p>
 {% endblock %}
