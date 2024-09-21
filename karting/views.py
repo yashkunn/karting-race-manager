@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic
 
-from karting.forms import RaceRegistrationForm, RaceSearchForm, KartSearchForm
+from karting.forms import RaceRegistrationForm, RaceSearchForm, KartSearchForm, RaceForm
 from karting.models import Race, Kart
 
 
@@ -56,7 +56,7 @@ class RaceListView(generic.ListView):
 
 class RaceCreateView(generic.CreateView):
     model = Race
-    fields = "__all__"
+    form_class = RaceForm
     success_url = reverse_lazy("karting:race-list")
 
 

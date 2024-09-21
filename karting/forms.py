@@ -1,6 +1,18 @@
 from django import forms
 
-from karting.models import RaceParticipation, Kart
+from karting.models import RaceParticipation, Kart, Race
+
+
+class RaceForm(forms.ModelForm):
+    class Meta:
+        model = Race
+        fields = ['name', 'category', 'date']
+        widgets = {
+            'date': forms.DateInput(attrs={
+                'type': 'date',
+                'class': 'form-control'
+            }),
+        }
 
 
 class RaceRegistrationForm(forms.ModelForm):
