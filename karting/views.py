@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic
 
-from karting.forms import RaceRegistrationForm, RaceSearchForm
+from karting.forms import RaceRegistrationForm, RaceSearchForm, KartSearchForm
 from karting.models import Race, Kart
 
 
@@ -76,6 +76,7 @@ class RaceDetailView(generic.DetailView):
     queryset = Race.objects.select_related("category")
     template_name = "karting/race-detail.html"
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         race = self.get_object()
@@ -95,6 +96,30 @@ class KartListView(generic.ListView):
     context_object_name = "karts"
     queryset = Kart.objects.select_related("category")
     paginate_by = 5
+
+    def get_queryset(self):
+        queryset = Kart.objects.select_related("category")
+        form = KartSearchForm(self.request.GET)
+
+        if form.is_valid():
+            search_term = form.cleaned_data["search"]
+
+            if search_term:
+                queryset = queryset.filter(
+                    Q(name__icontains=search_term) |
+                    Q(category__name__icontains=search_term)
+                )
+
+        return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(KartListView, self).get_context_data(**kwargs)
+        context["search_form"] = KartSearchForm(
+            initial={
+                "search": self.request.GET.get("search", ""),
+            }
+        )
+        return context
 
 
 class KartCreateView(generic.CreateView):

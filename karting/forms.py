@@ -25,3 +25,15 @@ class RaceSearchForm(forms.Form):
             "class": "form-control",
         }),
     )
+
+
+class KartSearchForm(forms.Form):
+    search = forms.CharField(
+        max_length=100,
+        required=False,
+        label="",
+        widget=forms.TextInput(attrs={
+            "placeholder": "Search by Name or Category",
+            "class": "form-control",
+        }),
+    )
