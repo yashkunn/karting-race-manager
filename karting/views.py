@@ -80,12 +80,17 @@ class RaceDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         race = self.get_object()
+        user = self.request.user
         is_eligible = False
+        is_registered = False
 
-        if self.request.user.is_authenticated:
-            is_eligible = race.is_user_eligible(self.request.user)
+        if user.is_authenticated:
+            is_eligible = race.is_user_eligible(user)
+            is_registered = race.participations.filter(user=user).exists()
 
         context["is_eligible"] = is_eligible
+        context["is_registered"] = is_registered
+        context["participants_count"] = race.participations.count()
 
         return context
 
