@@ -13,3 +13,15 @@ class RaceRegistrationForm(forms.ModelForm):
         self.race_category = kwargs.pop("race_category")
         super().__init__(*args, **kwargs)
         self.fields["kart"].queryset = Kart.objects.filter(category=self.race_category)
+
+
+class RaceSearchForm(forms.Form):
+    search = forms.CharField(
+        max_length=100,
+        required=False,
+        label="",
+        widget=forms.TextInput(attrs={
+            "placeholder": "Search by Name or Category",
+            "class": "form-control",
+        }),
+    )

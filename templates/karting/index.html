@@ -1,16 +1,24 @@
 {% extends "base/base.html" %}
+
 {% block title %}
   <title>Home Page</title>
 {% endblock %}
+
 {% block content %}
-  <h1>Karting home</h1>
-  <p>Welcome to the Karting Race!</p>
-  <h3>Upcoming races:</h3>
-  <ul>
-    {% for race in upcoming_races %}
-      <li>{{ race.name }} - {{ race.date }}</li>
-    {% empty %}
-      <li>No upcoming races available.</li>
-    {% endfor %}
-  </ul>
+  <div class="container mt-5">
+    <h1 class="text-center">Welcome to Karting Race!</h1>
+    <p class="text-center">Experience the thrill of racing!</p>
+    
+    <h3 class="mt-4">Upcoming Races:</h3>
+    <ul class="list-group">
+      {% for race in upcoming_races %}
+        <li class="list-group-item">
+          {{ race.name }} - <strong>{{ race.date }}</strong>
+        </li>
+      {% empty %}
+        <li class="list-group-item text-muted">No upcoming races available.</li>
+      {% endfor %}
+    </ul>
+  </div>
 {% endblock %}
+

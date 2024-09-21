@@ -1,10 +1,11 @@
+from django.db.models import Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic
 
-from karting.forms import RaceRegistrationForm
+from karting.forms import RaceRegistrationForm, RaceSearchForm
 from karting.models import Race, Kart
 
 
@@ -34,9 +35,23 @@ class RaceListView(generic.ListView):
 
     def get_queryset(self):
         if self.request.user.is_staff:
-            return Race.objects.select_related("category").order_by("date")
+            queryset = Race.objects.select_related("category").order_by("date")
         else:
-            return Race.objects.upcoming().select_related("category")
+            queryset = Race.objects.upcoming().select_related("category")
+
+        search_query = self.request.GET.get("search")
+
+        if search_query:
+            queryset = queryset.filter(
+                Q(name__icontains=search_query) | Q(category__name__icontains=search_query)
+            )
+
+        return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search_form"] = RaceSearchForm(self.request.GET)
+        return context
 
 
 class RaceCreateView(generic.CreateView):

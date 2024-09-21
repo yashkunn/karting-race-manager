@@ -1,10 +1,20 @@
 {% extends "base/base.html" %}
+{% load crispy_forms_filters %}
 
 {% block content %}
   <div class="container mt-5">
     <h1 class="mb-4 text-center">Upcoming Races</h1>
+    <form method="get" action="" class="d-flex mb-4 justify-content-center">
+      <div class="me-2 flex-grow-1">
+        {{ search_form|crispy }}
+      </div>
+      <button class="btn btn-secondary" type="submit" style="height: 100%;">🔍</button>
+    </form>
+
     {% if user.is_authenticated and user.is_staff %}
-      <a href="{% url 'karting:race-create' %}" class="btn btn-success mb-3">Create New Race</a>
+      <div class="text-center mb-3">
+        <a href="{% url 'karting:race-create' %}" class="btn btn-success">Create New Race</a>
+      </div>
     {% endif %}
 
     {% if race_list %}
@@ -13,9 +23,7 @@
           <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-sm">
               <div class="card-body">
-                <h5 class="card-title">
-                  {{ race.name }}
-                </h5>
+                <h5 class="card-title">{{ race.name }}</h5>
                 <p class="card-text">
                   <strong>Category:</strong> {{ race.category.name }}<br>
                   <strong>Date:</strong> {{ race.date }}

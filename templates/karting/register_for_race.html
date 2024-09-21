@@ -6,12 +6,18 @@
 {% endblock %}
 
 {% block content %}
-  <h2>Register for {{ race.name }}</h2>
-  <p>Username: {{ username }}</p>
-  <form method="POST">
-    {% csrf_token %}
-    {{ form|crispy }}
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
-  <a href="{% url 'karting:race-detail' race.id %}">Back to Race Details</a>
+  <div class="container mt-5">
+    <h2 class="mb-4 text-center">Register for {{ race.name }}</h2>
+    <p class="text-center">Username: {{ username }}</p>
+    
+    <form method="POST" class="text-center">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <button type="submit" class="btn btn-primary mt-3">Submit</button>
+    </form>
+    
+    <div class="text-center mt-3">
+      <a href="{% url 'karting:race-detail' race.id %}" class="btn btn-link">Back to Race Details</a>
+    </div>
+  </div>
 {% endblock %}

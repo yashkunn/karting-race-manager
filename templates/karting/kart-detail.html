@@ -5,22 +5,24 @@
 {% endblock %}
 
 {% block content %}
-  <h2>{{ kart.name }}</h2>
-  <p><strong>Category:</strong> {{ kart.category.name }}</p>
-  <p><strong>Speed:</strong> {{ kart.speed }} km/h</p>
-  <p><strong>Description:</strong> {{ kart.description }}</p>
-  <td>
-    {% if user.is_authenticated and user.is_staff %}
-      <a href="{% url 'karting:kart-update' kart.pk %}" class="btn btn-warning mt-2">Update Kart</a>
-    {% endif %}
-  </td>
-  <td>
-    {% if user.is_authenticated and user.is_staff %}
-      <a href="{% url 'karting:kart-delete' kart.pk %}" class="btn btn-danger link-to-page">
-        Delete
-      </a>
-    {% endif %}
-  </td>
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">{{ kart.name }}</h2>
+    
+    <div class="mb-3">
+      <p><strong>Category:</strong> {{ kart.category.name }}</p>
+      <p><strong>Speed:</strong> {{ kart.speed }} km/h</p>
+      <p><strong>Description:</strong> {{ kart.description }}</p>
+    </div>
 
-  <a href="{% url 'karting:karts-list' %}">Back to Kart List</a>
+    {% if user.is_authenticated and user.is_staff %}
+      <div class="d-flex justify-content-center mt-4">
+        <a href="{% url 'karting:kart-update' kart.pk %}" class="btn btn-warning me-2">Update Kart</a>
+        <a href="{% url 'karting:kart-delete' kart.pk %}" class="btn btn-danger">Delete</a>
+      </div>
+    {% endif %}
+
+    <div class="text-center mt-3">
+      <a href="{% url 'karting:karts-list' %}" class="btn btn-secondary">Back to Kart List</a>
+    </div>
+  </div>
 {% endblock %}
