@@ -18,6 +18,10 @@
   {% else %}
     <p class="text-muted">You must be <a href="{% url 'accounts:login' %}">logged</a> in to register for the race.</p>
   {% endif %}
+    {% if user.is_staff %}
+      <a href="{% url 'karting:race-update' pk=race.id %}" class="btn btn-warning mt-2">Update Race</a>
+      <a href="{% url 'karting:race-delete' pk=race.id %}" class="btn btn-danger link-to-page">Delete</a>
+    {% endif %}
   <br>
   <a href="{% url 'karting:race-list' %}">Back to Race List</a>
 {% endblock %}

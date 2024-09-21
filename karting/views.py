@@ -45,6 +45,11 @@ class RaceUpdateView(generic.UpdateView):
     success_url = reverse_lazy("karting:race-list")
 
 
+class RaceDeleteView(generic.DeleteView):
+    model = Race
+    success_url = reverse_lazy("karting:race-list")
+
+
 class RaceDetailView(generic.DetailView):
     model = Race
     queryset = Race.objects.select_related("category")
@@ -80,6 +85,11 @@ class KartCreateView(generic.CreateView):
 class KartUpdateView(generic.UpdateView):
     model = Kart
     fields = "__all__"
+    success_url = reverse_lazy("karting:karts-list")
+
+
+class KartDeleteView(generic.DeleteView):
+    model = Kart
     success_url = reverse_lazy("karting:karts-list")
 
 

@@ -15,8 +15,6 @@
       <th>Name</th>
       <th>Category</th>
       <th>Speed</th>
-      <th>Update</th>
-      <th>Delete</th>
     </tr>
     </thead>
     <tbody>
@@ -27,11 +25,6 @@
         </td>
         <td>{{ kart.category.name }}</td>
         <td>{{ kart.speed }} km/h</td>
-        <td>
-          {% if user.is_authenticated and user.is_staff %}
-            <a href="{% url 'karting:kart-update' kart.pk %}" class="btn btn-warning mt-2">Update Kart</a>
-          {% endif %}
-        </td>
       </tr>
     {% empty %}
       <tr>
