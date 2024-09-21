@@ -58,6 +58,7 @@ class Race(models.Model):
         related_name="races"
     )
     date = models.DateField()
+    max_participants = models.PositiveIntegerField()
     objects = RaceManager()
 
     def __str__(self) -> str:
@@ -65,6 +66,9 @@ class Race(models.Model):
 
     def is_user_eligible(self, user) -> bool:
         return self.category.min_age <= user.age <= self.category.max_age
+
+    def is_full(self) -> bool:
+        return self.participations.count() >= self.max_participants
 
 
 class RaceParticipation(models.Model):

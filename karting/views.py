@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.db.models import Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -6,7 +7,7 @@ from django.utils import timezone
 from django.views import generic
 
 from karting.forms import RaceRegistrationForm, RaceSearchForm, KartSearchForm, RaceForm
-from karting.models import Race, Kart
+from karting.models import Race, Kart, RaceParticipation
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -76,22 +77,22 @@ class RaceDetailView(generic.DetailView):
     queryset = Race.objects.select_related("category")
     template_name = "karting/race-detail.html"
 
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         race = self.get_object()
-        user = self.request.user
-        is_eligible = False
-        is_registered = False
 
-        if user.is_authenticated:
-            is_eligible = race.is_user_eligible(user)
-            is_registered = race.participations.filter(user=user).exists()
+        is_eligible = False
+        can_register = True
+
+        if self.request.user.is_authenticated:
+            is_eligible = race.is_user_eligible(self.request.user)
+            can_register = not race.is_full() and not RaceParticipation.objects.filter(
+                race=race, user=self.request.user
+            ).exists()
 
         context["is_eligible"] = is_eligible
-        context["is_registered"] = is_registered
+        context["can_register"] = can_register
         context["participants_count"] = race.participations.count()
-
         return context
 
 
@@ -114,7 +115,7 @@ class KartListView(generic.ListView):
                     Q(name__icontains=search_term) |
                     Q(category__name__icontains=search_term)
                 )
-
+        queryset = queryset.order_by('category__name')
         return queryset
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -150,28 +151,51 @@ class KartDetailView(generic.DetailView):
     template_name = "karting/kart-detail.html"
 
 
-def register_for_race(request, race_id) -> HttpResponse:
-    race = get_object_or_404(Race, id=race_id)
+class RegisterForRaceView(generic.View):
+    def get_race_and_check_full(self, race_id):
+        race = get_object_or_404(Race, id=race_id)
+        if race.participations.count() >= race.max_participants:
+            return race, True
+        return race, False
 
-    if request.method == "POST":
-        form = RaceRegistrationForm(
-            request.POST,
-            user=request.user,
-            race_category=race.category
-        )
+    def get(self, request, race_id):
+        race, is_full = self.get_race_and_check_full(race_id)
+
+        if is_full:
+            messages.error(request, "This race is full.")
+            return redirect("karting:race-detail", pk=race.id)
+
+        form = RaceRegistrationForm(user=request.user, race_category=race.category)
+        return render(request, "karting/register_for_race.html", {
+            "race": race,
+            "username": request.user.username,
+            "form": form,
+        })
+
+    def post(self, request, race_id):
+        if not request.user.is_authenticated:
+            messages.error(request, "You must be logged in to register for a race.")
+            return redirect("accounts:login")
+
+        race, is_full = self.get_race_and_check_full(race_id)
+
+        if is_full:
+            messages.error(request, "This race is full.")
+            return redirect("karting:race-detail", pk=race.id)
+
+        form = RaceRegistrationForm(request.POST, user=request.user, race_category=race.category)
+
         if form.is_valid():
             race_participation = form.save(commit=False)
             race_participation.user = request.user
             race_participation.race = race
             race_participation.save()
             return redirect("karting:race-detail", pk=race.id)
-    else:
-        form = RaceRegistrationForm(user=request.user, race_category=race.category)
 
-    return render(request, "karting/register_for_race.html", {
-        "race": race,
-        "username": request.user.username,
-        "form": form,
-    })
+        return render(request, "karting/register_for_race.html", {
+            "race": race,
+            "username": request.user.username,
+            "form": form,
+        })
 
 

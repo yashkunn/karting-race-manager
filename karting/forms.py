@@ -6,11 +6,11 @@ from karting.models import RaceParticipation, Kart, Race
 class RaceForm(forms.ModelForm):
     class Meta:
         model = Race
-        fields = ['name', 'category', 'date']
+        fields = ["name", "category", "date", "max_participants"]
         widgets = {
-            'date': forms.DateInput(attrs={
-                'type': 'date',
-                'class': 'form-control'
+            "date": forms.DateInput(attrs={
+                "type": "date",
+                "class": "form-control"
             }),
         }
 
