@@ -1,5 +1,6 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic
 
@@ -30,6 +31,18 @@ class RaceListView(generic.ListView):
 
     def get_queryset(self):
         return Race.objects.upcoming().select_related("category")
+
+
+class RaceCreateView(generic.CreateView):
+    model = Race
+    fields = "__all__"
+    success_url = reverse_lazy("karting:race-list")
+
+
+class RaceUpdateView(generic.UpdateView):
+    model = Race
+    fields = "__all__"
+    success_url = reverse_lazy("karting:race-list")
 
 
 class RaceDetailView(generic.DetailView):
@@ -87,4 +100,5 @@ def register_for_race(request, race_id) -> HttpResponse:
         "username": request.user.username,
         "form": form,
     })
-    
+
+
