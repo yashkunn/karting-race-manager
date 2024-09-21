@@ -152,17 +152,24 @@ class KartDetailView(generic.DetailView):
 
 
 class RegisterForRaceView(generic.View):
+
     def get_race_and_check_full(self, race_id):
         race = get_object_or_404(Race, id=race_id)
-        if race.participations.count() >= race.max_participants:
-            return race, True
-        return race, False
+        is_full = race.participations.count() >= race.max_participants
+        return race, is_full
+
+    def user_already_registered(self, user, race):
+        return RaceParticipation.objects.filter(user=user, race=race).exists()
 
     def get(self, request, race_id):
         race, is_full = self.get_race_and_check_full(race_id)
 
         if is_full:
             messages.error(request, "This race is full.")
+            return redirect("karting:race-detail", pk=race.id)
+
+        if self.user_already_registered(request.user, race):
+            messages.error(request, "You are already registered for this race.")
             return redirect("karting:race-detail", pk=race.id)
 
         form = RaceRegistrationForm(user=request.user, race_category=race.category)
@@ -183,6 +190,10 @@ class RegisterForRaceView(generic.View):
             messages.error(request, "This race is full.")
             return redirect("karting:race-detail", pk=race.id)
 
+        if self.user_already_registered(request.user, race):
+            messages.error(request, "You are already registered for this race.")
+            return redirect("karting:race-detail", pk=race.id)
+
         form = RaceRegistrationForm(request.POST, user=request.user, race_category=race.category)
 
         if form.is_valid():
@@ -190,6 +201,10 @@ class RegisterForRaceView(generic.View):
             race_participation.user = request.user
             race_participation.race = race
             race_participation.save()
+
+            kart = form.cleaned_data["kart"]
+            kart.available_quantity -= 1
+            kart.save()
             return redirect("karting:race-detail", pk=race.id)
 
         return render(request, "karting/register_for_race.html", {

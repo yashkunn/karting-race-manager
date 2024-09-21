@@ -45,6 +45,7 @@ class Kart(models.Model):
     )
     speed = models.PositiveIntegerField()
     description = models.TextField()
+    available_quantity = models.PositiveIntegerField(default=0)
 
     def __str__(self) -> str:
         return self.name
