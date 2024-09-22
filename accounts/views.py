@@ -10,9 +10,9 @@ from accounts.forms import RegistrationForm
 
 
 class RegistrationView(FormView):
-    template_name = 'accounts/register.html'
+    template_name = "accounts/register.html"
     form_class = RegistrationForm
-    success_url = reverse_lazy('accounts:login')
+    success_url = reverse_lazy("accounts:login")
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -28,5 +28,3 @@ class RegistrationView(FormView):
 
         messages.info(self.request, "Please, check your email for next steps")
         return super().form_valid(form)
-
-

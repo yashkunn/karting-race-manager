@@ -6,7 +6,12 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic
 
-from karting.forms import RaceRegistrationForm, RaceSearchForm, KartSearchForm, RaceForm
+from karting.forms import (
+    RaceRegistrationForm,
+    RaceSearchForm,
+    KartSearchForm,
+    RaceForm
+)
 from karting.models import Race, Kart, RaceParticipation
 
 
@@ -44,7 +49,8 @@ class RaceListView(generic.ListView):
 
         if search_query:
             queryset = queryset.filter(
-                Q(name__icontains=search_query) | Q(category__name__icontains=search_query)
+                Q(name__icontains=search_query)
+                | Q(category__name__icontains=search_query)
             )
 
         return queryset
@@ -87,7 +93,10 @@ class RaceDetailView(generic.DetailView):
 
         if self.request.user.is_authenticated:
             is_eligible = race.is_user_eligible(self.request.user)
-            is_registered = RaceParticipation.objects.filter(race=race, user=self.request.user).exists()
+            is_registered = RaceParticipation.objects.filter(
+                race=race,
+                user=self.request.user
+            ).exists()
             can_register = not race.is_full() and not is_registered
 
         context["is_eligible"] = is_eligible
@@ -113,10 +122,10 @@ class KartListView(generic.ListView):
 
             if search_term:
                 queryset = queryset.filter(
-                    Q(name__icontains=search_term) |
-                    Q(category__name__icontains=search_term)
+                    Q(name__icontains=search_term)
+                    | Q(category__name__icontains=search_term)
                 )
-        queryset = queryset.order_by('category__name')
+        queryset = queryset.order_by("category__name")
         return queryset
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -169,7 +178,10 @@ class RegisterForRaceView(generic.View):
             return True
 
         if self.user_already_registered(request.user, race):
-            messages.error(request, "You are already registered for this race.")
+            messages.error(
+                request,
+                "You are already registered for this race."
+            )
             return True
 
         return False
@@ -180,7 +192,10 @@ class RegisterForRaceView(generic.View):
         if self.handle_registration_errors(request, race):
             return redirect("karting:race-detail", pk=race.id)
 
-        form = RaceRegistrationForm(user=request.user, race_category=race.category)
+        form = RaceRegistrationForm(
+            user=request.user,
+            race_category=race.category
+        )
         return render(request, "karting/register_for_race.html", {
             "race": race,
             "username": request.user.username,
@@ -189,7 +204,10 @@ class RegisterForRaceView(generic.View):
 
     def post(self, request, race_id):
         if not request.user.is_authenticated:
-            messages.error(request, "You must be logged in to register for a race.")
+            messages.error(
+                request,
+                "You must be logged in to register for a race."
+            )
             return redirect("accounts:login")
 
         race = self.get_race_and_check_full(race_id)[0]
@@ -197,7 +215,11 @@ class RegisterForRaceView(generic.View):
         if self.handle_registration_errors(request, race):
             return redirect("karting:race-detail", pk=race.id)
 
-        form = RaceRegistrationForm(request.POST, user=request.user, race_category=race.category)
+        form = RaceRegistrationForm(
+            request.POST,
+            user=request.user,
+            race_category=race.category
+        )
 
         if form.is_valid():
             race_participation = form.save(commit=False)
@@ -219,10 +241,17 @@ class RegisterForRaceView(generic.View):
 
 def unregister_from_race_view(request, race_id):
     if not request.user.is_authenticated:
-        messages.error(request, "You must be logged in to unregister from a race.")
+        messages.error(
+            request,
+            "You must be logged in to unregister from a race."
+        )
         return redirect("accounts:login")
 
-    participation = get_object_or_404(RaceParticipation, race_id=race_id, user=request.user)
+    participation = get_object_or_404(
+        RaceParticipation,
+        race_id=race_id,
+        user=request.user
+    )
 
     kart = participation.kart
     kart.available_quantity += 1
@@ -230,7 +259,10 @@ def unregister_from_race_view(request, race_id):
 
     participation.delete()
 
-    messages.success(request, "You have successfully unregistered from the race.")
+    messages.success(
+        request,
+        "You have successfully unregistered from the race."
+    )
     return redirect("karting:race-detail", pk=race_id)
 
 
@@ -243,7 +275,10 @@ class ClearRegistrationsView(generic.View):
             total_removed_count += race.clear_past_registrations()
 
         if total_removed_count > 0:
-            messages.success(request, f"{total_removed_count} registrations have been deleted.")
+            messages.success(
+                request,
+                f"{total_removed_count} registrations have been deleted."
+            )
         else:
             messages.info(request, "No registrations have been deleted.")
 

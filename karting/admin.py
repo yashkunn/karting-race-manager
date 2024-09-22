@@ -2,10 +2,10 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .models import (
-    Race, 
-    RaceCategory, 
-    Kart, 
-    CustomUser, 
+    Race,
+    RaceCategory,
+    Kart,
+    CustomUser,
     RaceParticipation
 )
 
@@ -59,4 +59,3 @@ class KartAdmin(admin.ModelAdmin):
     list_display = ("name", "category", "speed")
     list_filter = ("category", "speed")
     search_fields = ("name", "category__name")
-    
