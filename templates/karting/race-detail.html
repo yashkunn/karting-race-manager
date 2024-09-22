@@ -15,13 +15,18 @@
       {% if user.is_authenticated %}
         {% if is_registered %}
           <p class="text-muted">You are already registered for this race.</p>
+          <form action="{% url 'karting:unregister-from-race' race.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Unregister from this Race</button>
+          </form>
         {% elif is_eligible %}
           <a href="{% url 'karting:register-for-race' race.id %}" class="btn btn-primary">Sign Up for this Race</a>
         {% else %}
           <p class="text-muted">You are not eligible to participate in this race due to age restrictions.</p>
         {% endif %}
       {% else %}
-        <p class="text-muted">You must be <a href="{% url 'accounts:login' %}">logged</a> in to register for the race.</p>
+        <p class="text-muted">You must be <a href="{% url 'accounts:login' %}">logged</a> in to register for the race.
+        </p>
       {% endif %}
 
       {% if user.is_staff %}

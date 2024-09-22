@@ -83,14 +83,15 @@ class RaceDetailView(generic.DetailView):
 
         is_eligible = False
         can_register = True
+        is_registered = False
 
         if self.request.user.is_authenticated:
             is_eligible = race.is_user_eligible(self.request.user)
-            can_register = not race.is_full() and not RaceParticipation.objects.filter(
-                race=race, user=self.request.user
-            ).exists()
+            is_registered = RaceParticipation.objects.filter(race=race, user=self.request.user).exists()
+            can_register = not race.is_full() and not is_registered
 
         context["is_eligible"] = is_eligible
+        context["is_registered"] = is_registered
         context["can_register"] = can_register
         context["participants_count"] = race.participations.count()
         return context
@@ -214,3 +215,17 @@ class RegisterForRaceView(generic.View):
         })
 
 
+def unregister_from_race_view(request, race_id):
+    if not request.user.is_authenticated:
+        messages.error(request, "You must be logged in to unregister from a race.")
+        return redirect("accounts:login")
+
+    participation = get_object_or_404(RaceParticipation, race_id=race_id, user=request.user)
+
+    kart = participation.kart
+    kart.available_quantity += 1
+    kart.save()
+
+    participation.delete()
+    messages.success(request, "You have successfully unregistered from the race.")
+    return redirect("karting:race-detail", pk=race_id)
