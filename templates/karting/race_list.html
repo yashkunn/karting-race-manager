@@ -14,6 +14,10 @@
     {% if user.is_authenticated and user.is_staff %}
       <div class="text-center mb-3">
         <a href="{% url 'karting:race-create' %}" class="btn btn-success">Create New Race</a>
+        <form method="post" action="{% url 'karting:clear-registrations' %}" class="d-inline">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Clear Past Race Registrations</button>
+        </form>
       </div>
     {% endif %}
 

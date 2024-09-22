@@ -232,3 +232,19 @@ def unregister_from_race_view(request, race_id):
 
     messages.success(request, "You have successfully unregistered from the race.")
     return redirect("karting:race-detail", pk=race_id)
+
+
+class ClearRegistrationsView(generic.View):
+    def post(self, request):
+        past_races = Race.objects.filter(date__lt=timezone.now().date())
+        total_removed_count = 0
+
+        for race in past_races:
+            total_removed_count += race.clear_past_registrations()
+
+        if total_removed_count > 0:
+            messages.success(request, f"{total_removed_count} registrations have been deleted.")
+        else:
+            messages.info(request, "No registrations have been deleted.")
+
+        return redirect("karting:race-list")

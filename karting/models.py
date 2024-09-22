@@ -72,7 +72,19 @@ class Race(models.Model):
     def is_full(self) -> bool:
         return self.participations.count() >= self.max_participants
 
+    def clear_past_registrations(self):
+        if self.date < timezone.now().date():
+            removed_participations = self.participations.all()
+            count = removed_participations.count()
 
+            for participation in removed_participations:
+                kart = participation.kart
+                kart.available_quantity += 1
+                kart.save()
+
+            removed_participations.delete()
+            return count
+        return 0
 
 
 class RaceParticipation(models.Model):

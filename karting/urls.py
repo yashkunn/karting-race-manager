@@ -14,7 +14,9 @@ from karting.views import (
     KartCreateView,
     KartDeleteView,
     RaceDeleteView,
-    RegisterForRaceView, unregister_from_race_view,
+    RegisterForRaceView,
+    unregister_from_race_view,
+    ClearRegistrationsView,
 
 )
 
@@ -34,4 +36,5 @@ urlpatterns = [
     path("race/<int:pk>/delete/", RaceDeleteView.as_view(), name="race-delete"),
     path("race/<int:race_id>/register/", RegisterForRaceView.as_view(), name="register-for-race"),
     path("race/<int:race_id>/unregister/", unregister_from_race_view, name="unregister-from-race"),
+    path("clear-registrations/", ClearRegistrationsView.as_view(), name="clear-registrations"),
     ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
