@@ -163,17 +163,14 @@ class KartDetailView(generic.DetailView):
 
 class RegisterForRaceView(generic.View):
 
-    def get_race_and_check_full(self, race_id):
-        race = get_object_or_404(Race, id=race_id)
-        is_full = race.participations.count() >= race.max_participants
-        return race, is_full
+    def get_race(self, race_id):
+        return get_object_or_404(Race, id=race_id)
 
     def user_already_registered(self, user, race):
         return RaceParticipation.objects.filter(user=user, race=race).exists()
 
     def handle_registration_errors(self, request, race):
-        is_full = race.participations.count() >= race.max_participants
-        if is_full:
+        if race.participations.count() >= race.max_participants:
             messages.error(request, "This race is full.")
             return True
 
@@ -186,8 +183,15 @@ class RegisterForRaceView(generic.View):
 
         return False
 
+    def render_registration_form(self, request, race, form):
+        return render(request, "karting/register_for_race.html", {
+            "race": race,
+            "username": request.user.username,
+            "form": form,
+        })
+
     def get(self, request, race_id):
-        race = self.get_race_and_check_full(race_id)[0]
+        race = self.get_race(race_id)
 
         if self.handle_registration_errors(request, race):
             return redirect("karting:race-detail", pk=race.id)
@@ -196,11 +200,7 @@ class RegisterForRaceView(generic.View):
             user=request.user,
             race_category=race.category
         )
-        return render(request, "karting/register_for_race.html", {
-            "race": race,
-            "username": request.user.username,
-            "form": form,
-        })
+        return self.render_registration_form(request, race, form)
 
     def post(self, request, race_id):
         if not request.user.is_authenticated:
@@ -210,7 +210,7 @@ class RegisterForRaceView(generic.View):
             )
             return redirect("accounts:login")
 
-        race = self.get_race_and_check_full(race_id)[0]
+        race = self.get_race(race_id)
 
         if self.handle_registration_errors(request, race):
             return redirect("karting:race-detail", pk=race.id)
@@ -232,11 +232,7 @@ class RegisterForRaceView(generic.View):
             kart.save()
             return redirect("karting:race-detail", pk=race.id)
 
-        return render(request, "karting/register_for_race.html", {
-            "race": race,
-            "username": request.user.username,
-            "form": form,
-        })
+        return self.render_registration_form(request, race, form)
 
 
 def unregister_from_race_view(request, race_id):
