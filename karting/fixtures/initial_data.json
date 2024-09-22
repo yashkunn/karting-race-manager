@@ -1,0 +1,202 @@
+[
+    {
+        "model": "karting.CustomUser",
+        "pk": 1,
+        "fields": {
+            "username": "john_doe",
+            "password": "hashed_password_1",
+            "date_of_birth": "1990-05-15"
+        }
+    },
+    {
+        "model": "karting.CustomUser",
+        "pk": 2,
+        "fields": {
+            "username": "jane_smith",
+            "password": "hashed_password_2",
+            "date_of_birth": "1985-11-20"
+        }
+    },
+    {
+        "model": "karting.CustomUser",
+        "pk": 3,
+        "fields": {
+            "username": "alice_johnson",
+            "password": "hashed_password_3",
+            "date_of_birth": "1992-03-30"
+        }
+    },
+    {
+        "model": "karting.CustomUser",
+        "pk": 4,
+        "fields": {
+            "username": "bob_brown",
+            "password": "hashed_password_4",
+            "date_of_birth": "1988-09-10"
+        }
+    },
+    {
+        "model": "karting.RaceCategory",
+        "pk": 1,
+        "fields": {
+            "name": "Category A",
+            "description": "This is a description for Category A.",
+            "min_age": 18,
+            "max_age": 30
+        }
+    },
+    {
+        "model": "karting.RaceCategory",
+        "pk": 2,
+        "fields": {
+            "name": "Category B",
+            "description": "This is a description for Category B.",
+            "min_age": 31,
+            "max_age": 45
+        }
+    },
+    {
+        "model": "karting.RaceCategory",
+        "pk": 3,
+        "fields": {
+            "name": "Category C",
+            "description": "This is a description for Category C.",
+            "min_age": 25,
+            "max_age": 35
+        }
+    },
+    {
+        "model": "karting.RaceCategory",
+        "pk": 4,
+        "fields": {
+            "name": "Category D",
+            "description": "This is a description for Category D.",
+            "min_age": 16,
+            "max_age": 20
+        }
+    },
+    {
+        "model": "karting.Kart",
+        "pk": 1,
+        "fields": {
+            "name": "Kart A",
+            "category": 1,
+            "speed": 120,
+            "description": "Fast Kart A.",
+            "available_quantity": 5
+        }
+    },
+    {
+        "model": "karting.Kart",
+        "pk": 2,
+        "fields": {
+            "name": "Kart B",
+            "category": 1,
+            "speed": 130,
+            "description": "Fast Kart B.",
+            "available_quantity": 3
+        }
+    },
+    {
+        "model": "karting.Kart",
+        "pk": 3,
+        "fields": {
+            "name": "Kart C",
+            "category": 2,
+            "speed": 110,
+            "description": "Fast Kart C.",
+            "available_quantity": 4
+        }
+    },
+    {
+        "model": "karting.Kart",
+        "pk": 4,
+        "fields": {
+            "name": "Kart D",
+            "category": 3,
+            "speed": 140,
+            "description": "Fast Kart D.",
+            "available_quantity": 2
+        }
+    },
+    {
+        "model": "karting.Race",
+        "pk": 1,
+        "fields": {
+            "name": "Race 1",
+            "category": 1,
+            "date": "2024-10-01",
+            "max_participants": 10
+        }
+    },
+    {
+        "model": "karting.Race",
+        "pk": 2,
+        "fields": {
+            "name": "Race 2",
+            "category": 2,
+            "date": "2024-11-01",
+            "max_participants": 15
+        }
+    },
+    {
+        "model": "karting.Race",
+        "pk": 3,
+        "fields": {
+            "name": "Race 3",
+            "category": 3,
+            "date": "2024-12-01",
+            "max_participants": 8
+        }
+    },
+    {
+        "model": "karting.Race",
+        "pk": 4,
+        "fields": {
+            "name": "Race 4",
+            "category": 4,
+            "date": "2024-09-15",
+            "max_participants": 12
+        }
+    },
+    {
+        "model": "karting.RaceParticipation",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "race": 1,
+            "kart": 1,
+            "date_registered": "2024-09-22T10:00:00Z"
+        }
+    },
+    {
+        "model": "karting.RaceParticipation",
+        "pk": 2,
+        "fields": {
+            "user": 2,
+            "race": 2,
+            "kart": 2,
+            "date_registered": "2024-09-22T10:00:00Z"
+        }
+    },
+    {
+        "model": "karting.RaceParticipation",
+        "pk": 3,
+        "fields": {
+            "user": 3,
+            "race": 3,
+            "kart": 3,
+            "date_registered": "2024-09-22T10:00:00Z"
+        }
+    },
+    {
+        "model": "karting.RaceParticipation",
+        "pk": 4,
+        "fields": {
+            "user": 4,
+            "race": 4,
+            "kart": 4,
+            "date_registered": "2024-09-22T10:00:00Z"
+        }
+    }
+]

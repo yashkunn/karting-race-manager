@@ -1,9 +1,7 @@
 from django.contrib import messages
-from django.contrib.auth import get_user_model
 from django.db import transaction
-from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse_lazy, reverse
-from django.views import View
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
 from django.views.generic import FormView
 
 from accounts.forms import RegistrationForm
@@ -26,5 +24,4 @@ class RegistrationView(FormView):
             user.is_active = True
             user.save()
 
-        messages.info(self.request, "Please, check your email for next steps")
         return super().form_valid(form)
