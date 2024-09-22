@@ -23,7 +23,9 @@ from karting.views import (
 app_name = "karting"
 
 urlpatterns = [
+    # main page
     path("", index, name="index"),
+    # karts
     path("karts/", KartListView.as_view(), name="karts-list"),
     path("karts/create/", KartCreateView.as_view(), name="kart-create"),
     path("karts/<int:pk>/", KartDetailView.as_view(), name="kart-detail"),
@@ -37,6 +39,7 @@ urlpatterns = [
         KartDeleteView.as_view(),
         name="kart-delete"
     ),
+    # races
     path("race/", RaceListView.as_view(), name="race-list"),
     path("race/create/", RaceCreateView.as_view(), name="race-create"),
     path("race/<int:pk>/", RaceDetailView.as_view(), name="race-detail"),
@@ -49,6 +52,7 @@ urlpatterns = [
         RaceDeleteView.as_view(),
         name="race-delete"
     ),
+    # registration to races
     path(
         "race/<int:race_id>/register/",
         RegisterForRaceView.as_view(),
@@ -59,6 +63,7 @@ urlpatterns = [
         unregister_from_race_view,
         name="unregister-from-race"
     ),
+    # clear registrations
     path(
         "clear-registrations/",
         ClearRegistrationsView.as_view(),
