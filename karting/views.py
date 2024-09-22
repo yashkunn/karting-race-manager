@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -262,7 +263,10 @@ def unregister_from_race_view(request, race_id):
     return redirect("karting:race-detail", pk=race_id)
 
 
-class ClearRegistrationsView(generic.View):
+class ClearRegistrationsView(LoginRequiredMixin, UserPassesTestMixin, generic.View):
+    def test_func(self):
+        return self.request.user.is_staff
+
     def post(self, request):
         past_races = Race.objects.filter(date__lt=timezone.now().date())
         total_removed_count = 0
