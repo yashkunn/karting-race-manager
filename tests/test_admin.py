@@ -6,6 +6,7 @@ from karting.models import Race, RaceCategory, Kart, RaceParticipation
 
 User = get_user_model()
 
+
 class AdminSiteTests(TestCase):
 
     def setUp(self):
