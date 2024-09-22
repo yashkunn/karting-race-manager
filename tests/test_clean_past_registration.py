@@ -58,11 +58,24 @@ class ClearRegistrationsViewTests(TestCase):
 
         response = self.client.post(reverse("karting:clear-registrations"))
         self.assertRedirects(response, reverse("karting:race-list"))
-        self.assertEqual(RaceParticipation.objects.filter(race=self.race_past).count(), 0)
-        self.assertEqual(RaceParticipation.objects.filter(race=self.race_future).count(), 1)
+        self.assertEqual(
+            RaceParticipation.objects.filter(
+                race=self.race_past
+            ).count(),
+            0
+        )
+        self.assertEqual(
+            RaceParticipation.objects.filter(
+                race=self.race_future
+            ).count(),
+            1
+        )
 
         messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(str(messages[0]), "1 registrations have been deleted.")
+        self.assertEqual(
+            str(messages[0]),
+            "1 registrations have been deleted."
+        )
 
     def test_no_registrations_deleted(self):
         RaceParticipation.objects.filter(race=self.race_past).delete()
@@ -72,4 +85,7 @@ class ClearRegistrationsViewTests(TestCase):
         self.assertRedirects(response, reverse("karting:race-list"))
 
         messages = list(get_messages(response.wsgi_request))
-        self.assertEqual(str(messages[0]), "No registrations have been deleted.")
+        self.assertEqual(
+            str(messages[0]),
+            "No registrations have been deleted."
+        )

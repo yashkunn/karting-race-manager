@@ -1,6 +1,17 @@
 from django.test import TestCase
-from karting.models import Race, RaceCategory, Kart, CustomUser, RaceParticipation
-from karting.forms import RaceForm, RaceRegistrationForm, RaceSearchForm, KartSearchForm
+from karting.models import (
+    Race,
+    RaceCategory,
+    Kart,
+    CustomUser,
+    RaceParticipation
+)
+from karting.forms import (
+    RaceForm,
+    RaceRegistrationForm,
+    RaceSearchForm,
+    KartSearchForm
+)
 
 
 class RaceFormTest(TestCase):

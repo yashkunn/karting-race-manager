@@ -45,15 +45,23 @@ class UnregisterFromRaceViewTests(TestCase):
             "karting:unregister-from-race",
             args=[self.race.id])
         )
-        self.assertRedirects(response, reverse(
-            "karting:race-detail",
-            args=[self.race.id])
-                             )
+        self.assertRedirects(
+            response,
+            reverse(
+                "karting:race-detail",
+                args=[self.race.id]
+            )
+        )
         self.assertEqual(RaceParticipation.objects.count(), 0)
 
     def test_kart_quantity_increased_after_unregister(self):
         self.client.login(username="testuser", password="testpass")
         initial_quantity = self.kart.available_quantity
-        self.client.get(reverse("karting:unregister-from-race", args=[self.race.id]))
+        self.client.get(
+            reverse(
+                "karting:unregister-from-race",
+                args=[self.race.id]
+            )
+        )
         self.kart.refresh_from_db()
         self.assertEqual(self.kart.available_quantity, initial_quantity + 1)

@@ -85,8 +85,10 @@ class AdminSiteTests(TestCase):
         self.assertContains(response, self.admin_user.username)
 
     def test_race_category_admin_change(self):
-        url = reverse("admin:karting_racecategory_change", args=[self.category.id])
+        url = reverse(
+            "admin:karting_racecategory_change",
+            args=[self.category.id]
+        )
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.category.name)
-

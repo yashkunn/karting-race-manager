@@ -1,6 +1,12 @@
 from django.test import TestCase
 from django.utils import timezone
-from karting.models import CustomUser, RaceCategory, Kart, Race, RaceParticipation
+from karting.models import (
+    CustomUser,
+    RaceCategory,
+    Kart,
+    Race,
+    RaceParticipation
+)
 
 
 class CustomUserTests(TestCase):
@@ -157,4 +163,7 @@ class RaceParticipationTests(TestCase):
         )
 
     def test_str_representation(self):
-        self.assertEqual(str(self.participation), "testuser - Grand Prix (Fast Kart)")
+        self.assertEqual(
+            str(self.participation),
+            "testuser - Grand Prix (Fast Kart)"
+        )

@@ -51,13 +51,18 @@ class KartViewTests(TestCase):
         )
         self.client.login(username="testuser", password="password")
 
-        response = self.client.post(reverse("karting:kart-update", args=[self.kart.id]), {
-            "name": "Updated Kart",
-            "category": self.category.id,
-            "speed": 20,
-            "description": "Very slow kart",
-            "available_quantity": 5
-        })
+        response = self.client.post(
+            reverse(
+                "karting:kart-update",
+                args=[self.kart.id]),
+            {
+                "name": "Updated Kart",
+                "category": self.category.id,
+                "speed": 20,
+                "description": "Very slow kart",
+                "available_quantity": 5
+            }
+        )
         self.assertEqual(response.status_code, 302)
         self.kart.refresh_from_db()
         self.assertEqual(self.kart.name, "Updated Kart")
@@ -70,12 +75,22 @@ class KartViewTests(TestCase):
         )
         self.client.login(username="testuser", password="password")
 
-        response = self.client.post(reverse("karting:kart-delete", args=[self.kart.id]))
-        self.assertEqual(response.status_code, 302)  # Redirects to kart list
+        response = self.client.post(
+            reverse(
+                "karting:kart-delete",
+                args=[self.kart.id]
+            )
+        )
+        self.assertEqual(response.status_code, 302)
         self.assertFalse(Kart.objects.filter(id=self.kart.id).exists())
 
     def test_kart_detail_view(self):
-        response = self.client.get(reverse("karting:kart-detail", args=[self.kart.id]))
+        response = self.client.get(
+            reverse(
+                "karting:kart-detail",
+                args=[self.kart.id]
+            )
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "karting/kart-detail.html")
         self.assertContains(response, "Test Kart")
