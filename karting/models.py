@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import models
 
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 from karting.managers import CustomUserManager, RaceManager
 
@@ -70,6 +71,8 @@ class Race(models.Model):
 
     def is_full(self) -> bool:
         return self.participations.count() >= self.max_participants
+
+
 
 
 class RaceParticipation(models.Model):

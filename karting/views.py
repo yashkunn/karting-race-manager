@@ -162,15 +162,22 @@ class RegisterForRaceView(generic.View):
     def user_already_registered(self, user, race):
         return RaceParticipation.objects.filter(user=user, race=race).exists()
 
-    def get(self, request, race_id):
-        race, is_full = self.get_race_and_check_full(race_id)
-
+    def handle_registration_errors(self, request, race):
+        is_full = race.participations.count() >= race.max_participants
         if is_full:
             messages.error(request, "This race is full.")
-            return redirect("karting:race-detail", pk=race.id)
+            return True
 
         if self.user_already_registered(request.user, race):
             messages.error(request, "You are already registered for this race.")
+            return True
+
+        return False
+
+    def get(self, request, race_id):
+        race = self.get_race_and_check_full(race_id)[0]
+
+        if self.handle_registration_errors(request, race):
             return redirect("karting:race-detail", pk=race.id)
 
         form = RaceRegistrationForm(user=request.user, race_category=race.category)
@@ -185,14 +192,9 @@ class RegisterForRaceView(generic.View):
             messages.error(request, "You must be logged in to register for a race.")
             return redirect("accounts:login")
 
-        race, is_full = self.get_race_and_check_full(race_id)
+        race = self.get_race_and_check_full(race_id)[0]
 
-        if is_full:
-            messages.error(request, "This race is full.")
-            return redirect("karting:race-detail", pk=race.id)
-
-        if self.user_already_registered(request.user, race):
-            messages.error(request, "You are already registered for this race.")
+        if self.handle_registration_errors(request, race):
             return redirect("karting:race-detail", pk=race.id)
 
         form = RaceRegistrationForm(request.POST, user=request.user, race_category=race.category)
@@ -227,5 +229,6 @@ def unregister_from_race_view(request, race_id):
     kart.save()
 
     participation.delete()
+
     messages.success(request, "You have successfully unregistered from the race.")
     return redirect("karting:race-detail", pk=race_id)
