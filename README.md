@@ -6,6 +6,8 @@ Welcome to the Karting Race site - a unique place where fans of speed and adrena
 
 Main functions: Race calendar: Check the schedule of upcoming karting competitions, find out about the dates carrying out. Go-Kart Review: Explore the various go-kart models, their features and capabilities. Registration: Easily register to race.
 
+## Check out the live version [here](https://karting-race-manager.onrender.com/)
+
 ## Developing
 
 Here's a brief intro about what a developer must do in order to start developing
