@@ -1,0 +1,48 @@
+{% extends "base/base.html" %}
+{% load crispy_forms_filters %}
+
+{% block title %}
+  <title>Karts</title>
+{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h2 class="mb-4 text-center">Kart List</h2>
+    <form method="get" action="" class="d-flex mb-4 justify-content-center">
+      <div class="me-2 flex-grow-1">
+        {{ search_form|crispy }}
+      </div>
+      <button class="btn btn-secondary" type="submit" style="height: 100%;">🔍</button>
+    </form>
+    {% if user.is_authenticated and user.is_staff %}
+      <div class="text-center mb-3">
+        <a href="{% url 'karting:kart-create' %}" class="btn btn-success">Create New Kart</a>
+      </div>
+    {% endif %}
+
+    <table class="table table-striped">
+      <thead class="table-dark">
+      <tr>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Speed</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for kart in karts %}
+        <tr>
+          <td>
+            <a href="{% url 'karting:kart-detail' kart.pk %}">{{ kart.name }}</a>
+          </td>
+          <td>{{ kart.category.name }}</td>
+          <td>{{ kart.speed }} km/h</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="3" class="text-center">No karts available.</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

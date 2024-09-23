@@ -1,0 +1,17 @@
+{% extends "base/base.html" %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h1 class="text-center">{{ object|yesno:"Update Race,Create Race" }}</h1>
+    
+    <form action="" method="post" novalidate>
+      {% csrf_token %}
+      {{ form|crispy }}
+
+      <div class="text-center mt-4">
+        <input type="submit" value="Submit" class="btn btn-primary">
+      </div>
+    </form>
+  </div>
+{% endblock %}

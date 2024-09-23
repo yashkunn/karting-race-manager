@@ -1,0 +1,36 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="{% url 'karting:index' %}">Karting</a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav me-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'karting:race-list' %}">Races</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'karting:karts-list' %}">Karts</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ms-auto">
+      {% if user.is_authenticated %}
+        <li class="nav-item">
+          <form method="post" action="{% url 'accounts:logout' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-link nav-link">Logout</button>
+          </form>
+        </li>
+      {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'accounts:register' %}">
+            <button type="button" class="btn btn-warning">Sign Up</button>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
