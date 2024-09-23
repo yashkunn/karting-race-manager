@@ -15,6 +15,7 @@ the project further:
 git clone https://github.com/yashkunn/karting-race-manager.git
 cd karting_race_manager/
 pip install -r requirements.txt
+python manage.py loaddata karting/fixtures/initial_data.json
 ```
 
 ```
